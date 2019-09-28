@@ -1,0 +1,6 @@
+# Byte-compiled / optimised files
+_pycache__/
+*.py[cod]
+
+# Distribution / packaging files
+*.egg-info/
