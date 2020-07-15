@@ -25,7 +25,7 @@ fix:
 	poetry run black migration_linter tests
 
 	@echo -e "${COLOR_BLUE}\n=== isort ===\n${NO_COLOR}"
-	poetry run isort --recursive migration_linter tests
+	poetry run isort migration_linter tests
 
 
 ##     check:   Run basic checks.
@@ -38,7 +38,7 @@ check:
 	poetry run pyflakes migration_linter tests
 
 	@echo -e "${COLOR_BLUE}\n=== Security: Bandit ===\n${NO_COLOR}"
-	poetry run bandit --recursive --quiet migration_linter
+	poetry run bandit --recursive --quiet --skip B322 migration_linter
 
 	@echo -e "${COLOR_BLUE}\n=== Security: Safety ===\n${NO_COLOR}"
 	poetry run safety check --bare
@@ -47,7 +47,7 @@ check:
 	poetry run black --quiet --check migration_linter tests
 
 	@echo -e "${COLOR_BLUE}\n=== Style: isort ===\n${NO_COLOR}"
-	poetry run isort --check --recursive migration_linter tests
+	poetry run isort --check migration_linter tests
 
 	@echo -e "${COLOR_GREEN}\nAll Good!${NO_COLOR}"
 
