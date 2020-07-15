@@ -1,15 +1,13 @@
-from migration_linter.checks.base import BaseCheck
+from migration_linter.checks.base import StatementCheck
 from migration_linter.selector import (
     AddColumnSelector,
-    NotNullSelector,
     NoDefaultValueSelector,
+    NotNullSelector,
 )
 
 
-class AddColumnNotNullNoDefaultCheck(BaseCheck):
+class AddColumnNotNullNoDefaultCheck(StatementCheck):
     """Verify new columns will not result in a table re-write."""
-
-    SELECTORS = [AddColumnSelector, NotNullSelector, NoDefaultValueSelector]
 
     NAME = "add-column-not-null-no-default"
     CODE = "M201"
@@ -30,3 +28,5 @@ class AddColumnNotNullNoDefaultCheck(BaseCheck):
 
         TODO: settings to specify dialect.
     """
+
+    _SELECTORS = [AddColumnSelector, NotNullSelector, NoDefaultValueSelector]

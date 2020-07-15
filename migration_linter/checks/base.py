@@ -1,64 +1,42 @@
-class BaseCheck:
-    SELECTORS = None
+from __future__ import annotations
+
+from typing import List, Optional
+
+
+class Check:
     NAME = None
     CODE = None
     EXPLANATION = None
 
     @classmethod
-    def build_check(cls, statement):
-        """Return the check, or None, for the given statement."""
-        if cls.applies_to(statement):
-            return cls(statement)
-
-    @classmethod
-    def applies_to(cls, statement):
-        """Return whether this check applies to the given statement."""
-        return all(selector.is_match for selector in cls._get_selectors(statement))
-
-    def __init__(self, statement):
-        self.statement = statement
-
-    @property
-    def error(self):
-        return MigrationError(
-            name=self.NAME, code=self.CODE, explanation=self.EXPLANATION, line=1
-        )
-
-    @classmethod
-    def _get_selectors(cls, statement):
-        return (selector_cls(statement) for selector_cls in cls.SELECTORS)
-
-
-class StatementCheck(BaseCheck):
-    """Check an individual statement."""
-
-
-# TODO: This
-# How does this work?
-# Needs all the statements
-# Can run its own selectors and stuff
-# Quite bespoke logic
-# error will give the error IF any
-# rename to get_error
-# build_check does nothing.
-class GlobalCheck:
-    NAME = None
-    CODE = None
-    EXPLANATION = None
-
-    def __init__(self, statements):
-        self.statements = statements
-
-    @property
-    def is_error(self):
+    def errors(cls, parsed_sql) -> List[MigrationError]:
         raise NotImplementedError()
 
-    @property
-    def error(self):
-        if self.is_error:
-            return MigrationError(
-                name=self.NAME, code=self.CODE, explanation=self.EXPLANATION
-            )
+    @classmethod
+    def _create_error(cls, line: Optional[int] = None) -> MigrationError:
+        return MigrationError(
+            name=cls.NAME, code=cls.CODE, explanation=cls.EXPLANATION, line=line
+        )
+
+
+class StatementCheck(Check):
+    """Check an individual statement."""
+
+    _SELECTORS = None
+
+    @classmethod
+    def errors(cls, parsed_sql) -> List[MigrationError]:
+        errors = []
+        for line, (statement, tokens) in enumerate(parsed_sql, start=1):
+            if cls.is_applicable(tokens):
+                errors.append(cls._create_error(line))
+
+        return errors
+
+    @classmethod
+    def is_applicable(cls, tokens) -> bool:
+        """Return whether this check applies to the given ."""
+        return all(selector.is_match(tokens) for selector in cls._SELECTORS)
 
 
 class MigrationError:
@@ -69,3 +47,6 @@ class MigrationError:
         self.code = code
         self.explanation = explanation
         self.line = line
+
+    def __repr__(self):
+        return f"<MigrationError(name={self.name}, code={self.code})>"

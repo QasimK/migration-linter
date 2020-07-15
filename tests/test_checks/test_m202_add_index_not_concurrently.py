@@ -1,5 +1,6 @@
 import pytest
 
+from migration_linter import parser
 from migration_linter.checks.m202_add_index_not_concurrently import (
     CreateIndexNotConcurrentlyCheck,
 )
@@ -13,16 +14,18 @@ class TestCreateIndexNotConcurrentlyCheckCheck:
             ("CREATE INDEX CONCURRENTLY column_idx ON table (column)", False),
         ],
     )
-    def test_applies_to(self, statement, expected_is_match):
+    def test_is_applicable(self, statement, expected_is_match):
+        tokens = parser.parse_statement(statement)
         assert (
-            CreateIndexNotConcurrentlyCheck.applies_to(statement) is expected_is_match
+            CreateIndexNotConcurrentlyCheck.is_applicable(tokens) is expected_is_match
         )
 
-    def test_error(self):
+    def test_errors(self):
         statement = "CREATE INDEX column_idx ON table (column)"
-        check = CreateIndexNotConcurrentlyCheck(statement)
+        tokens = parser.parse_statement(statement)
+        parsed_sql = [(statement, tokens)]
 
-        error = check.error
+        [error] = CreateIndexNotConcurrentlyCheck.errors(parsed_sql)
 
         assert error.code == "M202"
         assert error.line == 1

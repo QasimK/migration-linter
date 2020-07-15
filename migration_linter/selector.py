@@ -1,31 +1,24 @@
 """Selectors. Called filters due to an import problem with fire."""
 
-from migration_linter import parser
-
 
 class BaseSelector:
     SELECTOR = None
     INVERT = False
 
-    def __init__(self, statement):
-        self.statement = statement
-
-    @property
-    def is_match(self):
-        result = matches_statement(self.SELECTOR, self.statement)
-        if self.INVERT:
+    @classmethod
+    def is_match(cls, tokens):
+        result = matches_tokens(cls.SELECTOR, tokens)
+        if cls.INVERT:
             result = not result
         return result
 
 
-def matches_statement(selector, statement):
+def matches_tokens(selector, tokens):
     """Selectors are a simple list with a possible wildcard * in between words."""
-    selector = selector[:]
-
-    tokens = parser.parse_statement(statement)
     if not tokens:
         return False
 
+    selector = selector[:]
     tokens = list(tokens[0].flatten())
     while selector and tokens:
         if tokens[0].is_whitespace:
@@ -71,6 +64,6 @@ class NotConcurrentlySelector(BaseSelector):
     INVERT = True
 
 
-class NoStatementTimeoutSelector(BaseSelector):
-    SELECTOR = ("SET", "LOCAL", "statement_timeout")
-    INVERT = True
+class StatementTimeoutSelector(BaseSelector):
+    # TODO: Select by Number
+    SELECTOR = ("SET", "LOCAL", "statement_timeout", "=")

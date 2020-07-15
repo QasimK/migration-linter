@@ -1,5 +1,6 @@
 import pytest
 
+from migration_linter import parser
 from migration_linter.checks.m201_add_column_not_null_no_default import (
     AddColumnNotNullNoDefaultCheck,
 )
@@ -14,14 +15,16 @@ class TestAddColumnNotNullNoDefaultCheck:
             ("ALTER TABLE table ADD COLUMN col NOT NULL DEFAULT 1", False),
         ],
     )
-    def test_applies_to(self, statement, expected_is_match):
-        assert AddColumnNotNullNoDefaultCheck.applies_to(statement) is expected_is_match
+    def test_is_applicable(self, statement, expected_is_match):
+        tokens = parser.parse_statement(statement)
+        assert AddColumnNotNullNoDefaultCheck.is_applicable(tokens) is expected_is_match
 
-    def test_error(self):
+    def test_errors(self):
         statement = "ALTER TABLE ADD COLUMN NOT NULL"
-        check = AddColumnNotNullNoDefaultCheck(statement)
+        tokens = parser.parse_statement(statement)
+        parsed_sql = [(statement, tokens)]
 
-        error = check.error
+        [error] = AddColumnNotNullNoDefaultCheck.errors(parsed_sql)
 
         assert error.code == "M201"
         assert error.line == 1

@@ -1,6 +1,6 @@
 from typing import List
 
-from migration_linter.parser import split_sql
+from migration_linter import parser
 from migration_linter.checks.base import MigrationError
 from migration_linter.checks.defaults import DEFAULT_CHECKS
 
@@ -13,15 +13,15 @@ class Linter:
 
     def check_sql(self, sql: str) -> List[MigrationError]:
         """Return all errors found."""
+        parsed = []
+        for statement in parser.split_sql(sql):
+            tokens = parser.parse_statement(statement)
+            parsed.append((statement, tokens))
+
         errors = []
-        for statement in split_sql(sql):
-            errors.extend(list(self.check_statement(statement)))
+        for check in self.check_list:
+            errors.extend(check.errors(parsed))
 
-        return errors
-
-    def check_statement(self, statement):
-        checks = (check_cls.build_check(statement) for check_cls in self.check_list)
-        errors = (check.error for check in checks if check and check.error)
         return errors
 
 

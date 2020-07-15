@@ -1,11 +1,9 @@
-from migration_linter.checks.base import BaseCheck
+from migration_linter.checks.base import StatementCheck
 from migration_linter.selector import CreateIndexSelector, NotConcurrentlySelector
 
 
-class CreateIndexNotConcurrentlyCheck(BaseCheck):
+class CreateIndexNotConcurrentlyCheck(StatementCheck):
     """Verify new columns will not result in a table re-write."""
-
-    SELECTORS = [CreateIndexSelector, NotConcurrentlySelector]
 
     NAME = "add-index-not-concurrently"
     CODE = "M202"
@@ -17,3 +15,5 @@ class CreateIndexNotConcurrentlyCheck(BaseCheck):
 
             CREATE INDEX CONCURRENTLY my_column_idx ON my_table (my_column);
     """
+
+    _SELECTORS = [CreateIndexSelector, NotConcurrentlySelector]

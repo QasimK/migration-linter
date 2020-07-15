@@ -1,9 +1,10 @@
 import pytest
 
+from migration_linter import parser
 from migration_linter.selector import (
     AddColumnSelector,
-    NotNullSelector,
     NoDefaultValueSelector,
+    NotNullSelector,
 )
 
 
@@ -16,8 +17,9 @@ class TestAddColumnSelector:
             ("ALTER TABLE COLUMN col", False),
         ],
     )
-    def test_selector(self, statement, expected_is_match):
-        assert AddColumnSelector(statement).is_match is expected_is_match
+    def test_is_match(self, statement, expected_is_match):
+        tokens = parser.parse_statement(statement)
+        assert AddColumnSelector.is_match(tokens) is expected_is_match
 
 
 class TestNotNullSelector:
@@ -29,7 +31,8 @@ class TestNotNullSelector:
         ],
     )
     def test_is_match(self, statement, expected_is_match):
-        assert NotNullSelector(statement).is_match is expected_is_match
+        tokens = parser.parse_statement(statement)
+        assert NotNullSelector.is_match(tokens) is expected_is_match
 
 
 class TestNoDefaultValueSelector:
@@ -43,4 +46,5 @@ class TestNoDefaultValueSelector:
         ],
     )
     def test_is_match(self, statement, expected_is_match):
-        assert NoDefaultValueSelector(statement).is_match is expected_is_match
+        tokens = parser.parse_statement(statement)
+        assert NoDefaultValueSelector.is_match(tokens) is expected_is_match

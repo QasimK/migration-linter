@@ -1,38 +1,51 @@
-from migration_linter.checks.base import GlobalCheck
-from migration_linter.selector import NoStatementTimeoutSelector
+from typing import List
+
+from migration_linter.checks.base import Check, MigrationError
+from migration_linter.selector import StatementTimeoutSelector
 
 
-class StatementTimeoutMissingCheck(GlobalCheck):
+class StatementTimeoutMissingCheck(Check):
     NAME = "statement-timeout-missing"
     CODE = "M102"
     EXPLANATION = """
         There is no global statement timeout set, so certain commands may take
         a long time, causing other queries to block.
 
-        For example.
+        For example:
 
-        READ READ READ (CODE - TAKING ITS TIME)
-            ALTER TABLE (MIGRATION - BLOCKED ON READS)
-                READ (CODE - NOW BLOCKED ON ALTER)
+        TODO: This example is wrong - it applies to lock_timeout.
+
+        READ ... ... ... ... (APP - LONG QUERY TAKING ITS TIME)
+            ALTER TABLE  ... (MIGRATION - BLOCKED ON READ)
+                READ ... ... (APP - NOW BLOCKED ON ALTER)
+
+        Normally the second READ would execute concurrently with the first.
 
         A statement timeout will cancel the migration, causing it to rollback,
         and allowing the application to continue to use the database. This
-        prevents the application from going down due to its access to the DB
-        being blocked.
+        prevents the application from going down because its access to the
+        database is blocked.
+
+        A read requires an ACCESS SHARE lock. The ALTER TABLE requires an
+        ACCESS EXCLUSIVE lock. Therefore the migration is blocked while waiting
+        to acquire the lock.
 
         This can be resolved by:
 
             * Adding `SET LOCAL statement_timeout = '5s';` to the top of the
               migration, or
-            * Setting a global statement timeout on the migration's database
+            * Setting a session statement timeout on the migration's database
               connection. (TODO: how?)
 
         TODO: The documentation should contain a recipe book.
+
+        Consider setting this for all app queries as well.
     """
 
-    @property
-    def is_error(self):
-        return all(
-            NoStatementTimeoutSelector(statement).is_match
-            for statement in self.statements
-        )
+    @classmethod
+    def errors(cls, parsed_sql) -> List[MigrationError]:
+        for statement, tokens in parsed_sql:
+            if StatementTimeoutSelector.is_match(tokens):
+                return []
+
+        return [cls._create_error()]

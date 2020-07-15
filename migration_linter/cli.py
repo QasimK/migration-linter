@@ -2,7 +2,6 @@
 
 import platform
 import sys
-from operator import attrgetter
 
 import fire
 
@@ -18,7 +17,7 @@ class MigrationLinterCLI:
         if platform.system() == "Windows":
             stop_cmd = "<CTRL>-<Z> <Return>"
 
-        print(f"Enter SQL ({stop_cmd} to stop):")
+        print(f"Enter SQL ({stop_cmd} to finish entering SQL):")
         sql = ""
         try:
             while True:
@@ -29,7 +28,9 @@ class MigrationLinterCLI:
         linter = DefaultLinter()
         errors = linter.check_sql(sql)
         is_any_error = bool(errors)
-        sorted_errors = sorted(errors, key=attrgetter("line"))
+        sorted_errors = sorted(errors, key=_line_num)
+
+        print("")
 
         for error in sorted_errors:
             print(f"Error: {error.name} ({error.code})")
@@ -48,6 +49,10 @@ class MigrationLinterCLI:
     def server(self, host="localhost", port="3123"):
         """Start the Migration Linter REST server."""
         raise NotImplementedError()
+
+
+def _line_num(error):
+    return 0 if error.line is None else error.line
 
 
 if __name__ == "__main__":
