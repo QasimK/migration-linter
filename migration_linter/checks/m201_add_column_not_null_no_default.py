@@ -1,12 +1,11 @@
-from migration_linter.checks.base import register_check, BaseCheck
-from migration_linter.filters.base import (
+from migration_linter.checks.base import BaseCheck
+from migration_linter.selector import (
     AddColumnSelector,
     NotNullSelector,
     NoDefaultValueSelector,
 )
 
 
-@register_check
 class AddColumnNotNullNoDefaultCheck(BaseCheck):
     """Verify new columns will not result in a table re-write."""
 

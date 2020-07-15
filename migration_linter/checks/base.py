@@ -1,11 +1,3 @@
-DEFAULT_CHECKS = []
-
-
-def register_check(check_cls, check_list=DEFAULT_CHECKS):
-    DEFAULT_CHECKS.append(check_cls)
-    return check_cls
-
-
 class BaseCheck:
     SELECTORS = None
     NAME = None

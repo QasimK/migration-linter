@@ -6,14 +6,29 @@ authors = ["QasimK <noreply@QasimK.io>"]
 license = "AGPL-3.0"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 sqlparse = "^0.3.0"
 fire = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
 ipdb = {version = "^0.12.2", optional = true}
+pyflakes = "^2.2.0"
+bandit = "^1.6.2"
+safety = "^1.9.0"
+black = "^19.10b0"
+isort = "^5.1.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.black]
+target-version = ["py38"]
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88

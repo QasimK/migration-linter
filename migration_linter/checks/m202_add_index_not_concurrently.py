@@ -1,8 +1,7 @@
-from migration_linter.checks.base import register_check, BaseCheck
-from migration_linter.filters.base import CreateIndexSelector, NotConcurrentlySelector
+from migration_linter.checks.base import BaseCheck
+from migration_linter.selector import CreateIndexSelector, NotConcurrentlySelector
 
 
-@register_check
 class CreateIndexNotConcurrentlyCheck(BaseCheck):
     """Verify new columns will not result in a table re-write."""
 

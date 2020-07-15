@@ -1,11 +1,8 @@
 from typing import List
 
 from migration_linter.parser import split_sql
-from migration_linter.checks.base import MigrationError, DEFAULT_CHECKS
-
-
-def register_default_checks():
-    import migration_linter.checks.m201_add_column_not_null_no_default  # noqa
+from migration_linter.checks.base import MigrationError
+from migration_linter.checks.defaults import DEFAULT_CHECKS
 
 
 class Linter:
@@ -14,7 +11,7 @@ class Linter:
     def __init__(self, check_list=None):
         self.check_list = check_list or []
 
-    def check_sql(self, sql) -> List[MigrationError]:
+    def check_sql(self, sql: str) -> List[MigrationError]:
         """Return all errors found."""
         errors = []
         for statement in split_sql(sql):
@@ -32,6 +29,4 @@ class DefaultLinter(Linter):
     """The interface using the default set of errors."""
 
     def __init__(self):
-        super().__init__()
-        register_default_checks()
-        self.check_list.extend(DEFAULT_CHECKS)
+        super().__init__(check_list=DEFAULT_CHECKS)

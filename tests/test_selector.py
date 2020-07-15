@@ -1,6 +1,6 @@
 import pytest
 
-from migration_linter.filters.base import (
+from migration_linter.selector import (
     AddColumnSelector,
     NotNullSelector,
     NoDefaultValueSelector,

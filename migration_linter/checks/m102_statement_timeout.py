@@ -1,8 +1,7 @@
-from migration_linter.checks.base import register_check, GlobalCheck
-from migration_linter.filters.base import NoStatementTimeoutSelector
+from migration_linter.checks.base import GlobalCheck
+from migration_linter.selector import NoStatementTimeoutSelector
 
 
-@register_check
 class StatementTimeoutMissingCheck(GlobalCheck):
     NAME = "statement-timeout-missing"
     CODE = "M102"

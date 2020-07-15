@@ -1,3 +1,5 @@
+"""Selectors. Called filters due to an import problem with fire."""
+
 from migration_linter import parser
 
 
