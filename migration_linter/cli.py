@@ -2,6 +2,7 @@
 
 import platform
 import sys
+from pathlib import Path
 
 import fire
 
@@ -43,8 +44,25 @@ class MigrationLinterCLI:
 
     def files(self, *files):
         """Lint the specified file(s)."""
-        for file in files:
-            print(file)
+        paths = [Path(file) for file in files]
+        linter = DefaultLinter()
+        is_any_error = False
+
+        for path in paths:
+            print(str(path))
+            errors = linter.check_sql(path.read_text())
+            is_any_error = is_any_error or bool(errors)
+            sorted_errors = sorted(errors, key=_line_num)
+
+            print("")
+            for error in sorted_errors:
+                print(f"Error: {error.name} ({error.code})")
+
+            if not errors:
+                print("No errors.")
+
+        if is_any_error:
+            sys.exit(1)
 
     def server(self, host="localhost", port="3123"):
         """Start the Migration Linter REST server."""
