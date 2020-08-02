@@ -5,6 +5,8 @@ Check whether migrations will cause an outage.
 ## Usage
 
 * M1xx = Global errors
+    * M101 - Missing lock timeout
+    * M102 - Missing statement timeout
 * M2xx = Statement errors
     * M201 - Add NOT-NULL column with default (Earlier than Postgres 11 only)
         * Causes full-table rewrite to retrospectively apply default to all rows
@@ -28,6 +30,7 @@ Check whether migrations will cause an outage.
 
 1. `poetry install` to set up the virtualenv (one-off)
 2. `make fix`, `make check`, and `make test`, before committing
+3. `make test-all` before merging/publishing (uses tox to test for Python 3.7+)
 
 ### Contributing
 

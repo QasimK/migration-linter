@@ -4,3 +4,6 @@ _pycache__/
 
 # Distribution / packaging files
 *.egg-info/
+
+# Tests
+.tox/

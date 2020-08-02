@@ -1,27 +1,41 @@
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
 [tool.poetry]
 name = "migration-linter"
 version = "0.1.0"
 description = "Check for common database migration issues."
 authors = ["QasimK <noreply@QasimK.io>"]
 license = "AGPL-3.0"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-sqlparse = "^0.3.0"
+python = "^3.7"
+sqlparse = "^0.3.1"
 fire = "^0.2.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^3.0"
-ipdb = {version = "^0.12.2", optional = true}
+pytest = "^3.10.1"
+ipdb = {version = "^0.13.3", optional = true}
 pyflakes = "^2.2.0"
 bandit = "^1.6.2"
 safety = "^1.9.0"
 black = "^19.10b0"
-isort = "^5.1.0"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+isort = "^5.2.2"
+tox = "^3.18.1"
 
 [tool.black]
 target-version = ["py38"]
@@ -33,3 +47,15 @@ include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 line_length = 88
+skip_gitignore = true
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py37,py38
+isolated_build = True
+
+[testenv]
+allowlist_externals = make
+commands = make test
+"""
