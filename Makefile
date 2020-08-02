@@ -23,7 +23,7 @@ help: Makefile
 fix:
 	@echo -e "Fixing...\n"
 	@echo -e "${COLOR_BLUE}=== Style: autoflake ===\n${NO_COLOR}"
-	@poetry run autoflake --remove-all-unused-imports --in-place --recursive migration_linter
+	@poetry run autoflake --remove-all-unused-imports --in-place --recursive migration_linter tests
 
 	@echo -e "${COLOR_BLUE}\n=== Style: isort ===\n${NO_COLOR}"
 	@poetry run isort --quiet migration_linter tests
