@@ -59,6 +59,10 @@ class CreateIndexSelector(BaseSelector):
     SELECTOR = ("CREATE", "INDEX")
 
 
+class CreateUniqueIndexSelector(BaseSelector):
+    SELECTOR = ("CREATE", "UNIQUE", "INDEX")
+
+
 class NotConcurrentlySelector(BaseSelector):
     SELECTOR = ("*", "CONCURRENTLY")
     INVERT = True
