@@ -21,11 +21,11 @@ help: Makefile
 ##     fix: Automatically fix checks (where possible).
 .PHONY: fix
 fix:
-	@echo -e "${COLOR_BLUE}\n=== Black ===\n${NO_COLOR}"
-	poetry run black migration_linter tests
-
 	@echo -e "${COLOR_BLUE}\n=== isort ===\n${NO_COLOR}"
 	poetry run isort migration_linter tests
+
+	@echo -e "${COLOR_BLUE}\n=== Black ===\n${NO_COLOR}"
+	poetry run black migration_linter tests
 
 
 ##     check:   Run basic checks.
@@ -43,11 +43,11 @@ check:
 	@echo -e "${COLOR_BLUE}\n=== Security: Safety ===\n${NO_COLOR}"
 	poetry run safety check --bare
 
-	@echo -e "${COLOR_BLUE}\n=== Style: Black ===\n${NO_COLOR}"
-	poetry run black --quiet --check migration_linter tests
-
 	@echo -e "${COLOR_BLUE}\n=== Style: isort ===\n${NO_COLOR}"
 	poetry run isort --check migration_linter tests
+
+	@echo -e "${COLOR_BLUE}\n=== Style: Black ===\n${NO_COLOR}"
+	poetry run black --quiet --check migration_linter tests
 
 	@echo -e "${COLOR_GREEN}\nAll Good!${NO_COLOR}"
 

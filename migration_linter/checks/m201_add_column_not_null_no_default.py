@@ -1,9 +1,7 @@
 from migration_linter.checks.base import StatementCheck
-from migration_linter.selector import (
-    AddColumnSelector,
-    NoDefaultValueSelector,
-    NotNullSelector,
-)
+from migration_linter.selector import AddColumnSelector
+from migration_linter.selector import NoDefaultValueSelector
+from migration_linter.selector import NotNullSelector
 
 
 class AddColumnNotNullNoDefaultCheck(StatementCheck):

@@ -1,5 +1,6 @@
 from migration_linter.checks.base import StatementCheck
-from migration_linter.selector import CreateIndexSelector, NotConcurrentlySelector
+from migration_linter.selector import CreateIndexSelector
+from migration_linter.selector import NotConcurrentlySelector
 
 
 class CreateIndexNotConcurrentlyCheck(StatementCheck):

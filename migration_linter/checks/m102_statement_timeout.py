@@ -1,6 +1,7 @@
 from typing import List
 
-from migration_linter.checks.base import Check, MigrationError
+from migration_linter.checks.base import Check
+from migration_linter.checks.base import MigrationError
 from migration_linter.selector import StatementTimeoutSelector
 
 

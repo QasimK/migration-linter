@@ -1,11 +1,9 @@
 import pytest
 
 from migration_linter import parser
-from migration_linter.selector import (
-    AddColumnSelector,
-    NoDefaultValueSelector,
-    NotNullSelector,
-)
+from migration_linter.selector import AddColumnSelector
+from migration_linter.selector import NoDefaultValueSelector
+from migration_linter.selector import NotNullSelector
 
 
 class TestAddColumnSelector:
