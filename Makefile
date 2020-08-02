@@ -18,19 +18,26 @@ help: Makefile
 	@sed -n 's/^##//p' $<
 
 
-##     fix: Automatically fix checks (where possible).
+##     fix:     Automatically fix checks (where possible).
 .PHONY: fix
 fix:
-	@echo -e "${COLOR_BLUE}=== isort ===\n${NO_COLOR}"
+	@echo -e "Fixing...\n"
+	@echo -e "${COLOR_BLUE}=== Style: autoflake ===\n${NO_COLOR}"
+	@poetry run autoflake --remove-all-unused-imports --in-place --recursive migration_linter
+
+	@echo -e "${COLOR_BLUE}\n=== Style: isort ===\n${NO_COLOR}"
 	@poetry run isort --quiet migration_linter tests
 
-	@echo -e "${COLOR_BLUE}\n=== Black ===\n${NO_COLOR}"
+	@echo -e "${COLOR_BLUE}\n=== Style: Black ===\n${NO_COLOR}"
 	@poetry run black --quiet migration_linter tests
+
+	@echo -e "${COLOR_GREEN}\n=== All Done! ===${NO_COLOR}"
 
 
 ##     check:   Run basic checks.
 .PHONY: check
 check:
+	@echo -e "Checking...\n"
 	@echo -e "${COLOR_BLUE}=== Correctness: Poetry ===\n${NO_COLOR}"
 	@poetry --quiet check
 
@@ -55,11 +62,20 @@ check:
 ##     test:    Run tests.
 .PHONY: test
 test:
+	@echo -e "Testing...\n"
+
 	@echo -e "${COLOR_BLUE}=== Pytest ===\n${NO_COLOR}"
 	@poetry run pytest --quiet tests
 
-##     test-all:    Run tests across supported Python versions.
-.PHONY: test-all
-test-all:
+	@echo -e "${COLOR_GREEN}\n=== All Good! ===${NO_COLOR}"
+
+
+##     all:     Run tests across supported Python versions.
+.PHONY: all
+all: check
+	@echo -e "Testing all...\n"
+
 	@echo -e "${COLOR_BLUE}=== Tox ===\n${NO_COLOR}"
 	@poetry run tox --quiet
+
+	@echo -e "${COLOR_GREEN}\n=== Truly All Good! ===${NO_COLOR}"

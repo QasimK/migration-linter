@@ -29,8 +29,8 @@ Check whether migrations will cause an outage.
 ## Development
 
 1. `poetry install` to set up the virtualenv (one-off)
-2. `make fix`, `make check`, and `make test`, before committing
-3. `make test-all` before merging/publishing (uses tox to test for Python 3.7+)
+2. `make fix`, `make check`, and `make test` while coding
+3. `make all` before committing (uses tox to test for Python 3.7+)
 
 ### Contributing
 
