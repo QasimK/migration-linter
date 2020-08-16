@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import List
 from typing import Optional
 
+from migration_linter import types
+
 
 class Check:
     NAME = None
@@ -10,12 +12,12 @@ class Check:
     EXPLANATION = None
 
     @classmethod
-    def errors(cls, parsed_sql) -> List[MigrationError]:
+    def errors(cls, parsed_sql) -> List[types.MigrationError]:
         raise NotImplementedError()
 
     @classmethod
-    def _create_error(cls, line: Optional[int] = None) -> MigrationError:
-        return MigrationError(
+    def _create_error(cls, line: Optional[int] = None) -> types.MigrationError:
+        return types.MigrationError(
             name=cls.NAME, code=cls.CODE, explanation=cls.EXPLANATION, line=line
         )
 
@@ -26,7 +28,7 @@ class StatementCheck(Check):
     _SELECTORS = None
 
     @classmethod
-    def errors(cls, parsed_sql) -> List[MigrationError]:
+    def errors(cls, parsed_sql) -> List[types.MigrationError]:
         errors = []
         for line, (statement, tokens) in enumerate(parsed_sql, start=1):
             if cls.is_applicable(tokens):
@@ -38,16 +40,3 @@ class StatementCheck(Check):
     def is_applicable(cls, tokens) -> bool:
         """Return whether this check applies to the given ."""
         return all(selector.is_match(tokens) for selector in cls._SELECTORS)
-
-
-class MigrationError:
-    """An error can apply to a specific line, or globally."""
-
-    def __init__(self, name, code, explanation, line=None):
-        self.name = name
-        self.code = code
-        self.explanation = explanation
-        self.line = line
-
-    def __repr__(self):
-        return f"<MigrationError(name={self.name}, code={self.code})>"

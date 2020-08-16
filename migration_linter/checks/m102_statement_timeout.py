@@ -1,7 +1,7 @@
 from typing import List
 
+from migration_linter import types
 from migration_linter.checks.base import Check
-from migration_linter.checks.base import MigrationError
 from migration_linter.selector import StatementTimeoutSelector
 
 
@@ -44,7 +44,7 @@ class StatementTimeoutMissingCheck(Check):
     """
 
     @classmethod
-    def errors(cls, parsed_sql) -> List[MigrationError]:
+    def errors(cls, parsed_sql) -> List[types.MigrationError]:
         for statement, tokens in parsed_sql:
             if StatementTimeoutSelector.is_match(tokens):
                 return []
