@@ -70,9 +70,9 @@ test:
 	@echo -e "${COLOR_GREEN}\n=== All Good! ===${NO_COLOR}"
 
 
-##     all:     Run tests across supported Python versions.
+##     all:     Run checks and tests across supported Python versions.
 .PHONY: all
-all: check
+all: fix check
 	@echo -e "Testing all...\n"
 
 	@echo -e "${COLOR_BLUE}=== Tox ===\n${NO_COLOR}"

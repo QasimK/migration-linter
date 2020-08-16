@@ -22,10 +22,13 @@ classifiers = [
     "Topic :: Software Development :: Testing",
 ]
 
+[tool.poetry.scripts]
+migration-linter = 'migration_linter.__main__:main'
+
 [tool.poetry.dependencies]
 python = "^3.7"
 sqlparse = "^0.3.1"
-fire = "^0.2.1"
+click = "^7.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.10.1"
@@ -57,6 +60,10 @@ envlist = py37,py38
 isolated_build = True
 
 [testenv]
-allowlist_externals = make
-commands = make test
+allowlist_externals =
+    poetry
+    make
+commands =
+    poetry install -v
+    make test
 """

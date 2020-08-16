@@ -12,7 +12,7 @@ def _sql(name: str) -> str:
 
 def test_main_stdin_with_no_errors():
     result = subprocess.run(
-        ["python", "migration_linter"],
+        ["migration-linter", "-"],
         input=_sql("safe_migration.sql"),
         capture_output=True,
         encoding="utf-8",
@@ -26,21 +26,21 @@ def test_main_stdin_with_no_errors():
 
 def test_main_stdin_with_errors():
     result = subprocess.run(
-        ["python", "migration_linter"],
+        ["migration-linter", "-"],
         input=_sql("unsafe_migration.sql"),
         capture_output=True,
         encoding="utf-8",
         timeout=1,
     )
 
-    assert result.returncode == 1
+    assert result.returncode != 0
     assert "M102" in result.stdout
     assert result.stderr == ""
 
 
 def test_main_files_with_no_errors():
     result = subprocess.run(
-        ["python", "migration_linter", _file("safe_migration.sql")],
+        ["migration-linter", _file("safe_migration.sql")],
         capture_output=True,
         encoding="utf-8",
         timeout=1,
@@ -54,12 +54,12 @@ def test_main_files_with_no_errors():
 
 def test_main_files_with_errors():
     result = subprocess.run(
-        ["python", "migration_linter", _file("unsafe_migration.sql")],
+        ["migration-linter", _file("unsafe_migration.sql")],
         capture_output=True,
         encoding="utf-8",
         timeout=1,
     )
 
-    assert result.returncode == 1
+    assert result.returncode != 0
     assert "M102" in result.stdout
     assert result.stderr == ""
