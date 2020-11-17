@@ -4,6 +4,7 @@ import platform
 
 import click
 
+from migration_linter import types
 from migration_linter.linter import DefaultLinter
 
 
@@ -28,7 +29,8 @@ def main(files):
     is_any_error = False
     for file in files:
         _show_filename(file)
-        errors = linter.check_sql(file.read())
+        source = types.Source(filename=file.name, sql=file.read())
+        errors = linter.check_sql(source)
         errors = sorted(errors, key=_line_num)
         is_any_error |= bool(errors)
 

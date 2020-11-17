@@ -11,10 +11,10 @@ class Linter:
     def __init__(self, check_list=None):
         self.check_list = check_list or []
 
-    def check_sql(self, sql: str) -> List[types.MigrationError]:
+    def check_sql(self, source: types.Source) -> List[types.MigrationError]:
         """Return all errors found."""
         parsed = []
-        for statement in parser.split_sql(sql):
+        for statement in parser.split_sql(source):
             tokens = parser.parse_statement(statement)
             parsed.append((statement, tokens))
 
